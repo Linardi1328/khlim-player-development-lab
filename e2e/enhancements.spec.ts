@@ -28,6 +28,24 @@ test("language preference translates the login experience", async ({
   await expect(page.getByLabel("Alamat e-mel")).toBeVisible();
 });
 
+test("every supported login language stays within the viewport", async ({
+  page,
+}) => {
+  await page.goto("/login");
+  const language = page.getByLabel("Language");
+  for (const locale of ["en", "ms", "zh-CN"]) {
+    await language.selectOption(locale);
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            document.documentElement.scrollHeight <= window.innerHeight + 1,
+        ),
+      )
+      .toBe(true);
+  }
+});
+
 test("local lab forgot-password flow returns a temporary reset path", async ({
   request,
 }) => {
