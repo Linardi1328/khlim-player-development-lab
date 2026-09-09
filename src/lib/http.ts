@@ -9,7 +9,9 @@ function firstHeaderValue(value: string | null) {
 export function checkOrigin(request: Request) {
   const origin = request.headers.get("origin");
   const host = firstHeaderValue(request.headers.get("host"));
-  const forwardedHost = firstHeaderValue(request.headers.get("x-forwarded-host"));
+  const forwardedHost = firstHeaderValue(
+    request.headers.get("x-forwarded-host"),
+  );
   const forwardedProto = firstHeaderValue(
     request.headers.get("x-forwarded-proto"),
   );
