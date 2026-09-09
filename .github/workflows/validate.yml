@@ -3,8 +3,6 @@ name: Validate player lab
 on:
   pull_request:
     branches: [main]
-  push:
-    branches: [astra/initial-player-development-build]
 
 permissions:
   contents: read

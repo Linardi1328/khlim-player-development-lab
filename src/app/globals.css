@@ -2594,3 +2594,12 @@ footer {
     font-size: 20px;
   }
 }
+
+@media (min-width: 701px) and (max-width: 1000px) {
+  .measurement-charts {
+    grid-template-columns: 1fr;
+  }
+  .chart svg text {
+    font-size: 17px;
+  }
+}

@@ -36,7 +36,9 @@ The initial inspection found and fixed:
 1. An SVG tooltip with multiple text nodes caused a React hydration mismatch on a freshly loaded populated profile. Rendering one string fixes it, with a full-load regression assertion.
 2. Several muted labels failed contrast checks. The revised colors pass automated contrast checks on the three key screens at all viewports.
 3. Validation tried to focus a disabled field before React committed the enabled state. Focus now follows the error-state commit and is covered by a browser assertion.
-4. Mobile SVG chart labels scaled too small. Labels now use a larger viewBox font size on phone layouts.
+4. Mobile SVG chart labels scaled too small. Labels now use a larger viewBox font size on phone layouts. Final tablet inspection also found narrow two-column measurement charts; tablets now use one column with larger labels.
+
+Final independent production inspection included athlete sign-in and profile/measurement charts at 390×844, 768×1024 and 1440×1000, with no browser errors.
 
 The browser tool's generic date-fill operation did not populate Chromium's native date control reliably; Playwright's date input interaction succeeded through the complete workflows. This was treated as a browser-tool interaction limitation, not a successful manual submission.
 
@@ -48,7 +50,7 @@ The browser tool's generic date-fill operation did not populate Chromium's nativ
 - Repeated seed runs preserved existing records and counts; review-created data remains separate from fixture creation.
 - ESLint, strict TypeScript, Prettier and 23 unit tests: passed.
 - Full 19-scenario Playwright run against the development server: passed after fixes.
-- Final production build: passed. All 19 production-mode Playwright tests passed in 23.1 seconds, with no skipped tests. Final static/unit/schema/status checks also passed after the build.
+- Final production build: passed. All 19 production-mode Playwright tests passed with no skipped tests. Final static/unit/schema/status checks also passed after the build.
 
 Artifacts are local and ignored: `artifacts/`, `test-results/`, `playwright-report/`. CI uploads failure evidence only, retained for seven days. Browser tests clean up only their machine-named unlinked athlete records, preserving seed athletes and manual review records.
 
