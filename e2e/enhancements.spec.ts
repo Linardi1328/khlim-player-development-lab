@@ -38,8 +38,7 @@ test("every supported login language stays within the viewport", async ({
     await expect
       .poll(() =>
         page.evaluate(
-          () =>
-            document.documentElement.scrollHeight <= window.innerHeight + 1,
+          () => document.documentElement.scrollHeight <= window.innerHeight + 1,
         ),
       )
       .toBe(true);
