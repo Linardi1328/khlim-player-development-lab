@@ -1,8 +1,9 @@
 "use client";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useRef, type FormEvent } from "react";
-import { ArrowRight, Check, LoaderCircle } from "lucide-react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { ArrowRight, Check, Eye, EyeOff, LoaderCircle } from "lucide-react";
 import {
   metrics,
   sessionTypes,
@@ -11,6 +12,8 @@ import {
   statuses,
   today,
 } from "@/lib/domain";
+import { useLanguage } from "./language-provider";
+
 type Field = {
   name: string;
   label: string;
@@ -23,6 +26,55 @@ type Field = {
   step?: string;
   maxLength?: number;
 };
+
+export function PasswordInput({
+  id,
+  name,
+  disabled,
+  required = true,
+  autoComplete = "current-password",
+  ariaInvalid,
+  ariaDescribedBy,
+  maxLength = 128,
+}: {
+  id: string;
+  name: string;
+  disabled?: boolean;
+  required?: boolean;
+  autoComplete?: string;
+  ariaInvalid?: boolean;
+  ariaDescribedBy?: string;
+  maxLength?: number;
+}) {
+  const { tr } = useLanguage();
+  const [visible, setVisible] = useState(false);
+  return (
+    <div className="password-shell">
+      <input
+        id={id}
+        name={name}
+        required={required}
+        disabled={disabled}
+        type={visible ? "text" : "password"}
+        maxLength={maxLength}
+        autoComplete={autoComplete}
+        aria-invalid={ariaInvalid}
+        aria-describedby={ariaDescribedBy}
+      />
+      <button
+        type="button"
+        className="password-toggle"
+        onClick={() => setVisible((value) => !value)}
+        aria-label={tr(visible ? "Hide password" : "Show password")}
+        title={tr(visible ? "Hide password" : "Show password")}
+        disabled={disabled}
+      >
+        {visible ? <EyeOff size={18} /> : <Eye size={18} />}
+      </button>
+    </div>
+  );
+}
+
 export function DataForm({
   endpoint,
   method = "POST",
@@ -39,10 +91,12 @@ export function DataForm({
   after?: string;
 }) {
   const router = useRouter();
+  const { tr } = useLanguage();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const formRef = useRef<HTMLFormElement>(null);
+
   useEffect(() => {
     const name = Object.keys(errors)[0];
     const field = name ? formRef.current?.elements.namedItem(name) : null;
@@ -77,16 +131,24 @@ export function DataForm({
       setPending(false);
     }
   }
+
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="data-form">
       {error && (
         <div role="alert" className="form-error">
-          {error}
+          {tr(error)}
         </div>
       )}
       <div className="form-fields">
         {fields.map((field) => {
           const id = `field-${field.name}`;
+          const describedBy =
+            [
+              field.help ? `${id}-help` : "",
+              errors[field.name] ? `${id}-error` : "",
+            ]
+              .filter(Boolean)
+              .join(" ") || undefined;
           const common = {
             id,
             name: field.name,
@@ -94,25 +156,21 @@ export function DataForm({
             defaultValue: field.value,
             disabled: pending,
             "aria-invalid": !!errors[field.name],
-            "aria-describedby":
-              [
-                field.help ? `${id}-help` : "",
-                errors[field.name] ? `${id}-error` : "",
-              ]
-                .filter(Boolean)
-                .join(" ") || undefined,
+            "aria-describedby": describedBy,
           };
           return (
             <div
               className={`field ${field.type === "textarea" ? "field-wide" : ""}`}
               key={field.name}
             >
-              <label htmlFor={id}>{field.label}</label>
+              <div className="field-label-row">
+                <label htmlFor={id}>{tr(field.label)}</label>
+              </div>
               {field.options ? (
                 <select {...common}>
                   {Object.entries(field.options).map(([value, label]) => (
                     <option key={value} value={value}>
-                      {label}
+                      {tr(label)}
                     </option>
                   ))}
                 </select>
@@ -121,6 +179,15 @@ export function DataForm({
                   {...common}
                   rows={4}
                   maxLength={field.maxLength ?? 2000}
+                />
+              ) : field.type === "password" ? (
+                <PasswordInput
+                  id={id}
+                  name={field.name}
+                  disabled={pending}
+                  ariaInvalid={!!errors[field.name]}
+                  ariaDescribedBy={describedBy}
+                  maxLength={field.maxLength ?? 128}
                 />
               ) : (
                 <input
@@ -141,12 +208,12 @@ export function DataForm({
               )}
               {field.help && (
                 <p id={`${id}-help`} className="field-help">
-                  {field.help}
+                  {tr(field.help)}
                 </p>
               )}
               {errors[field.name] && (
                 <p id={`${id}-error`} className="field-error">
-                  {errors[field.name]}
+                  {tr(errors[field.name])}
                 </p>
               )}
             </div>
@@ -156,18 +223,18 @@ export function DataForm({
       <div className="form-actions">
         {back && (
           <Link className="button button-quiet" href={back}>
-            Cancel
+            {tr("Cancel")}
           </Link>
         )}
         <button className="button button-dark" disabled={pending} type="submit">
           {pending ? (
             <>
               <LoaderCircle className="spin" size={17} />
-              Saving…
+              {tr("Saving…")}
             </>
           ) : (
             <>
-              {submit}
+              {tr(submit)}
               <ArrowRight size={17} />
             </>
           )}
@@ -176,28 +243,38 @@ export function DataForm({
     </form>
   );
 }
+
 export function LoginForm() {
+  const { tr } = useLanguage();
   return (
-    <DataForm
-      endpoint="/api/auth/login"
-      fields={[
-        {
-          name: "email",
-          label: "Email address",
-          type: "email",
-          maxLength: 254,
-        },
-        {
-          name: "password",
-          label: "Password",
-          type: "password",
-          maxLength: 128,
-        },
-      ]}
-      submit="Sign in to the lab"
-    />
+    <>
+      <DataForm
+        endpoint="/api/auth/login"
+        fields={[
+          {
+            name: "email",
+            label: "Email address",
+            type: "email",
+            maxLength: 254,
+          },
+          {
+            name: "password",
+            label: "Password",
+            type: "password",
+            maxLength: 128,
+          },
+        ]}
+        submit="Sign in to the lab"
+      />
+      <div className="login-form-tools">
+        <Link href="/forgot-password" className="forgot-link">
+          {tr("Forgot password?")}
+        </Link>
+      </div>
+    </>
   );
 }
+
 export function ProfileForm({
   athlete,
 }: {
@@ -250,7 +327,7 @@ export function ProfileForm({
               "Wing",
               "Forward",
               "Center",
-            ].map((x) => [x, x]),
+            ].map((value) => [value, value]),
           ),
           value: athlete?.position,
         },
@@ -268,6 +345,7 @@ export function ProfileForm({
     />
   );
 }
+
 export const recordNames: Record<string, string> = {
   assessments: "assessment",
   measurements: "measurement",
@@ -275,6 +353,7 @@ export const recordNames: Record<string, string> = {
   training: "training session",
   feedback: "coach feedback",
 };
+
 export function RecordForm({
   athleteId,
   kind,
@@ -361,7 +440,11 @@ export function RecordForm({
         options: statuses,
         value: "NOT_STARTED",
       },
-      { name: "description", label: "Practice plan", type: "textarea" },
+      {
+        name: "description",
+        label: "Practice plan",
+        type: "textarea",
+      },
     ],
     training: [
       dateField("sessionDate", "Session date"),
@@ -405,6 +488,7 @@ export function RecordForm({
     </div>
   );
 }
+
 export function GoalStatusForm({
   id,
   status,
@@ -413,6 +497,7 @@ export function GoalStatusForm({
   status: keyof typeof statuses;
 }) {
   const router = useRouter();
+  const { tr } = useLanguage();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
@@ -435,14 +520,14 @@ export function GoalStatusForm({
           setSaved(true);
           router.refresh();
         } catch {
-          setError("Could not update status. Try again.");
+          setError(tr("Could not update status. Try again."));
         } finally {
           setPending(false);
         }
       }}
     >
       <label className="sr-only" htmlFor={`goal-${id}`}>
-        Goal status
+        {tr("Goal status")}
       </label>
       <select
         id={`goal-${id}`}
@@ -452,17 +537,17 @@ export function GoalStatusForm({
       >
         {Object.entries(statuses).map(([key, value]) => (
           <option key={key} value={key}>
-            {value}
+            {tr(value)}
           </option>
         ))}
       </select>
       <button className="button button-small" disabled={pending}>
-        {pending ? "Saving…" : "Update"}
+        {pending ? tr("Saving…") : tr("Update")}
       </button>
       {saved && (
         <span className="saved-inline" role="status">
           <Check size={15} />
-          Saved
+          {tr("Saved")}
         </span>
       )}
       {error && (

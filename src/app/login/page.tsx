@@ -2,14 +2,18 @@ import { redirect } from "next/navigation";
 import { ArrowUpRight, FlaskConical } from "lucide-react";
 import { authProvider, getViewer } from "@/lib/auth";
 import { LoginForm } from "@/components/forms";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { Court } from "@/components/ui";
+
 export const metadata = { title: "Sign in" };
+
 export default async function Login() {
   const viewer = await getViewer();
   if (viewer)
     redirect(
       viewer.role === "COACH" ? "/dashboard" : `/athletes/${viewer.athleteId}`,
     );
+
   return (
     <div className="login-page">
       <section className="login-story">
@@ -56,6 +60,9 @@ export default async function Login() {
       </section>
       <section className="login-panel">
         <div className="login-form-wrap">
+          <div className="login-language">
+            <LanguageSwitcher />
+          </div>
           <span className="prototype-tag">KHLIM LABS · EXPERIMENT 001</span>
           <h2>Welcome to the lab.</h2>
           <p>Sign in to see the work behind the progress.</p>
@@ -67,17 +74,21 @@ export default async function Login() {
               <dl>
                 <div>
                   <dt>Coach</dt>
-                  <dd>coach1@playerlab.example.test</dd>
+                  <dd data-no-translate>coach1@playerlab.example.test</dd>
                 </div>
                 <div>
                   <dt>Athlete</dt>
-                  <dd>athlete1@playerlab.example.test</dd>
+                  <dd data-no-translate>athlete1@playerlab.example.test</dd>
                 </div>
                 <div>
                   <dt>Password</dt>
-                  <dd>LabPractice!2026</dd>
+                  <dd data-no-translate>LabPractice!2026</dd>
                 </div>
               </dl>
+              <p className="lab-reset-note">
+                This is the default fixture password. A local password reset can
+                change it for this database.
+              </p>
             </div>
           )}
           <p className="login-disclaimer">

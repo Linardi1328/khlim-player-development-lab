@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,6 +13,9 @@ import {
 } from "lucide-react";
 import type { Viewer } from "@/lib/access";
 import { Avatar } from "./ui";
+import { LanguageSwitcher } from "./language-switcher";
+import { useLanguage } from "./language-provider";
+
 export function Shell({
   viewer,
   children,
@@ -21,21 +25,23 @@ export function Shell({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { tr } = useLanguage();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const coach = viewer.role === "COACH";
   const links = coach
     ? [
-        { href: "/dashboard", title: "Overview", icon: LayoutDashboard },
-        { href: "/athletes", title: "Athlete roster", icon: Users },
+        { href: "/dashboard", title: tr("Overview"), icon: LayoutDashboard },
+        { href: "/athletes", title: tr("Athlete roster"), icon: Users },
       ]
     : [
         {
           href: `/athletes/${viewer.athleteId}`,
-          title: "My development",
+          title: tr("My development"),
           icon: Activity,
         },
       ];
+
   async function logout() {
     setBusy(true);
     try {
@@ -48,14 +54,15 @@ export function Shell({
       router.replace("/login");
       router.refresh();
     } catch {
-      setError("Sign out failed. Try again.");
+      setError(tr("Sign out failed. Try again."));
       setBusy(false);
     }
   }
+
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main">
-        Skip to content
+        {tr("Skip to content")}
       </a>
       <aside className="sidebar">
         <Link
@@ -73,13 +80,13 @@ export function Shell({
             <em>PLAYER DEVELOPMENT</em>
           </span>
         </Link>
-        <div className="workspace-label">THE DEVELOPMENT LAB</div>
-        <nav aria-label="Main navigation">
+        <div className="workspace-label">{tr("THE DEVELOPMENT LAB")}</div>
+        <nav aria-label={tr("Main navigation")}>
           {links.map(({ href, title, icon: Icon }) => (
             <Link
               key={href}
               href={href}
-              className={`nav-link ${(href === "/athletes" ? pathname.startsWith(href) : pathname === href) ? "active" : ""}`}
+              className={`nav-link ${href === "/athletes" ? (pathname.startsWith(href) ? "active" : "") : pathname === href ? "active" : ""}`}
               aria-current={
                 (
                   href === "/athletes"
@@ -98,19 +105,22 @@ export function Shell({
         </nav>
         <div className="sidebar-note">
           <FlaskConical size={20} />
-          <strong>A space to get better.</strong>
-          <p>Small steps. Consistent practice. Progress that lasts.</p>
+          <strong>{tr("A space to get better.")}</strong>
+          <p>{tr("Small steps. Consistent practice. Progress that lasts.")}</p>
           <span>EXPERIMENT 001</span>
         </div>
+        <LanguageSwitcher compact />
         <div className="account">
           <Avatar name={viewer.name} />
-          <div>
+          <div data-no-translate>
             <strong>{viewer.name}</strong>
-            <span>{coach ? "Coach" : "Athlete"} · Lab account</span>
+            <span>
+              {coach ? tr("Coach") : tr("Athlete")} · {tr("Lab account")}
+            </span>
           </div>
           <button
-            aria-label="Sign out"
-            title="Sign out"
+            aria-label={tr("Sign out")}
+            title={tr("Sign out")}
             onClick={logout}
             disabled={busy}
             className="icon-button"
@@ -127,15 +137,15 @@ export function Shell({
             KHLIM PLAYER DEVELOPMENT LAB
           </span>
           <span className="prototype-tag">
-            Synthetic data <span>·</span> Prototype
+            {tr("Synthetic data")} <span>·</span> {tr("Prototype")}
           </span>
         </header>
         <main id="main" tabIndex={-1}>
           {children}
         </main>
         <footer>
-          Built for development. Designed for possibility.
-          <span>KHLIM Labs · Experimental prototype</span>
+          {tr("Built for development. Designed for possibility.")}
+          <span>{tr("KHLIM Labs · Experimental prototype")}</span>
         </footer>
       </div>
     </div>
