@@ -9,6 +9,20 @@ select {
   padding-right: 46px;
 }
 
+.brand-mark {
+  overflow: hidden;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: -3px;
+  padding-right: 3px;
+}
+
+.login-story .brand-mark {
+  font-size: 22px;
+  letter-spacing: -3px;
+  padding-right: 3px;
+}
+
 .password-shell {
   position: relative;
 }
@@ -125,6 +139,18 @@ select {
   display: flex;
   justify-content: flex-end;
   margin-bottom: clamp(10px, 2vh, 20px);
+}
+
+html[lang="ms"] .login-message h1 {
+  font-size: clamp(34px, 3.85vw, 56px);
+  letter-spacing: -0.055em;
+  white-space: nowrap;
+}
+
+html[lang="ms"] .login-form-wrap h2 {
+  font-size: clamp(23px, 1.9vw, 28px);
+  letter-spacing: -0.04em;
+  white-space: nowrap;
 }
 
 .auth-simple-page {
@@ -258,6 +284,10 @@ select {
     font-size: 28px;
   }
 
+  html[lang="ms"] .login-form-wrap h2 {
+    font-size: 23px;
+  }
+
   .login-form-wrap > p {
     font-size: 12px;
     line-height: 1.35;
@@ -338,6 +368,11 @@ select {
   .login-form-wrap h2 {
     margin-top: 10px;
     margin-bottom: 6px;
+  }
+
+  html[lang="ms"] .login-form-wrap h2 {
+    font-size: clamp(20px, 6vw, 25px);
+    white-space: normal;
   }
 
   .login-form-wrap .data-form {
