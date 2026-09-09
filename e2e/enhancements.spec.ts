@@ -61,5 +61,7 @@ test("AI draft action responds without saving the assessment", async ({
     })
     .toBe(true);
   expect(page.url()).toBe(recordUrl);
-  await expect(page.getByRole("button", { name: "Save assessment" })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Save assessment" }),
+  ).toBeVisible();
 });
