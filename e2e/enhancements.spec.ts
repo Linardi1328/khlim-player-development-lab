@@ -49,7 +49,7 @@ test("AI draft action responds without saving the assessment", async ({
     .getByRole("link", { name: /Avery Tan/ })
     .first()
     .click();
-  await page.getByRole("link", { name: "New check-in" }).click();
+  await page.getByRole("link", { name: "New check-in" }).first().click();
   const notes = page.getByLabel("Assessment notes");
   const recordUrl = page.url();
   await page.getByRole("button", { name: "Draft with AI" }).click();
