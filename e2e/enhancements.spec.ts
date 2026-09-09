@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { headers } from "./helpers";
+import { headers, login } from "./helpers";
 
 test("login supports password visibility and recovery navigation", async ({
   page,
@@ -40,11 +40,10 @@ test("local lab forgot-password flow returns a temporary reset path", async ({
   expect(body.resetUrl).toMatch(/^\/reset-password\?token=/);
 });
 
-test("AI drafting responds without auto-saving", async ({ page }) => {
-  await page.goto("/login");
-  await page.getByLabel("Email address").fill("coach1@playerlab.example.test");
-  await page.getByLabel("Password", { exact: true }).fill("LabPractice!2026");
-  await page.getByRole("button", { name: "Sign in to the lab" }).click();
+test("AI draft action responds without saving the assessment", async ({
+  page,
+}) => {
+  await login(page, "coach1");
   await page.goto("/athletes");
   await page
     .getByRole("link", { name: /Avery Tan/ })
@@ -52,6 +51,7 @@ test("AI drafting responds without auto-saving", async ({ page }) => {
     .click();
   await page.getByRole("link", { name: "New check-in" }).click();
   const notes = page.getByLabel("Assessment notes");
+  const recordUrl = page.url();
   await page.getByRole("button", { name: "Draft with AI" }).click();
   await expect
     .poll(async () => {
@@ -60,4 +60,6 @@ test("AI drafting responds without auto-saving", async ({ page }) => {
       return Boolean(draft || error.join(" "));
     })
     .toBe(true);
+  expect(page.url()).toBe(recordUrl);
+  await expect(page.getByRole("button", { name: "Save assessment" })).toBeVisible();
 });
