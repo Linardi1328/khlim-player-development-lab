@@ -4,7 +4,7 @@
   --bg: #f6f7f2;
   --paper: #fff;
   --ink: #222b22;
-  --muted: #697263;
+  --muted: #59664d;
   --line: #e2e6db;
   --lime: #d5f477;
   --green: #4d6b38;
@@ -111,7 +111,7 @@ textarea {
   font-size: 14px;
 }
 input::placeholder {
-  color: #7c8376;
+  color: #59664d;
 }
 input[aria-invalid="true"],
 select[aria-invalid="true"],
@@ -230,7 +230,7 @@ strong {
 .badge-orange {
   background: #fff1e7;
   border-color: #f8dec9;
-  color: #a14d22;
+  color: #59664d;
 }
 .avatar {
   display: inline-grid;
@@ -292,7 +292,7 @@ strong {
   border-radius: var(--radius);
 }
 .empty > svg {
-  color: #829263;
+  color: #59664d;
 }
 .empty p {
   font-size: 13px;
@@ -381,7 +381,7 @@ strong {
   font-size: 9px;
   letter-spacing: 0.12em;
   font-weight: 600;
-  color: #78816f;
+  color: #59664d;
   margin: 54px 11px 17px;
 }
 .sidebar nav {
@@ -397,7 +397,7 @@ strong {
   font-size: 12px;
   font-weight: 600;
   border-radius: 7px;
-  color: #697260;
+  color: #59664d;
 }
 .nav-link.active {
   background: #dfe8c5;
@@ -416,7 +416,7 @@ strong {
 .sidebar-note {
   margin: auto 5px 28px;
   padding: 22px 12px 0;
-  color: #62714e;
+  color: #59664d;
 }
 .sidebar-note strong {
   display: block;
@@ -488,7 +488,7 @@ strong {
   font-size: 9px;
   letter-spacing: 0.07em;
   font-weight: 600;
-  color: #68735c;
+  color: #59664d;
 }
 .prototype-tag > span {
   padding: 0 5px;
@@ -515,7 +515,7 @@ strong {
   margin-bottom: 30px;
 }
 .page-heading .eyebrow {
-  color: #718063;
+  color: #59664d;
   margin-bottom: 8px;
 }
 .page-heading p:not(.eyebrow) {
@@ -532,7 +532,7 @@ footer {
   gap: 16px;
   border-top: 1px solid var(--line);
   font-size: 9px;
-  color: #7c8572;
+  color: #59664d;
   padding: 22px 38px;
 }
 /* Coach overview */
@@ -566,7 +566,7 @@ footer {
 }
 .hero .court {
   position: absolute;
-  color: #96ad76;
+  color: #59664d;
   opacity: 0.3;
   width: 62%;
   right: -70px;
@@ -579,7 +579,7 @@ footer {
   bottom: 26px;
   font-size: 8px;
   letter-spacing: 0.24em;
-  color: #a8bc91;
+  color: #59664d;
 }
 .stats-grid {
   display: grid;
@@ -596,7 +596,7 @@ footer {
 .stat p {
   font-size: 11px;
   font-weight: 600;
-  color: #646f5c;
+  color: #59664d;
 }
 .stat strong {
   display: block;
@@ -607,7 +607,7 @@ footer {
 }
 .stat > span {
   font-size: 10px;
-  color: #77816e;
+  color: #59664d;
 }
 .stat-accent {
   background: #edf4dc;
@@ -660,7 +660,7 @@ footer {
 }
 .group-card p {
   font-size: 10px;
-  color: #6c7460;
+  color: #59664d;
   line-height: 1.65;
   min-height: 34px;
 }
@@ -693,7 +693,7 @@ footer {
   display: grid;
   place-items: center;
   background: #f0f3e8;
-  color: #718156;
+  color: #59664d;
   border: 1px solid #e4e9d9;
   width: 38px;
   height: 38px;
@@ -713,7 +713,7 @@ footer {
   margin-left: auto;
 }
 .activity-row > svg {
-  color: #7b866e;
+  color: #59664d;
 }
 .goal-focus {
   padding: 23px;
@@ -746,7 +746,7 @@ footer {
   margin-left: 8px;
 }
 .focus-goal svg {
-  color: #6d7a59;
+  color: #59664d;
 }
 .focus-goal h3 {
   font-size: 13px;
@@ -770,11 +770,11 @@ footer {
   font-size: 8px;
   letter-spacing: 0.12em;
   font-weight: 700;
-  color: #687659;
+  color: #59664d;
 }
 .coach-note p {
   font-size: 11px;
-  color: #627053;
+  color: #59664d;
   margin-top: 7px;
 }
 /* Roster */
@@ -804,7 +804,7 @@ footer {
 .search-field svg {
   position: absolute;
   left: 14px;
-  color: #7e8970;
+  color: #59664d;
 }
 .search-field input {
   padding-left: 41px;
@@ -845,7 +845,7 @@ footer {
   font-size: 29px;
   font-weight: 600;
   letter-spacing: -0.05em;
-  color: #c7cebc;
+  color: #68775b;
   margin-left: auto;
 }
 .athlete-card h2 {
@@ -863,7 +863,7 @@ footer {
 }
 .athlete-focus > .eyebrow {
   font-size: 8px;
-  color: #7b876b;
+  color: #59664d;
 }
 .athlete-focus p {
   font-size: 12px;
@@ -878,21 +878,21 @@ footer {
   justify-content: space-between;
   gap: 12px;
   font-size: 9px;
-  color: #667559;
+  color: #59664d;
 }
 .athlete-card-meta {
   margin-top: 17px;
   padding-top: 13px;
   border-top: 1px solid #edf0e7;
   font-size: 9px;
-  color: #76836b;
+  color: #59664d;
   display: flex;
   justify-content: space-between;
 }
 /* Athlete development */
 .back-link {
   margin-bottom: 22px;
-  color: #6c775f;
+  color: #59664d;
 }
 .profile-heading {
   display: flex;
@@ -911,7 +911,7 @@ footer {
 }
 .profile-identity > .eyebrow {
   font-size: 9px;
-  color: #7b856e;
+  color: #59664d;
   margin-bottom: 7px;
 }
 .profile-identity h1 {
@@ -922,7 +922,7 @@ footer {
   align-items: center;
   gap: 12px;
   font-size: 11px;
-  color: #69765d;
+  color: #59664d;
   margin-top: 10px;
 }
 .profile-actions {
@@ -949,7 +949,7 @@ footer {
 .focus-banner .eyebrow {
   font-size: 8px;
   white-space: nowrap;
-  color: #657c43;
+  color: #59664d;
 }
 .focus-banner p {
   font-size: 12px;
@@ -966,7 +966,7 @@ footer {
 .profile-tabs a {
   padding: 16px 0;
   font-size: 12px;
-  color: #7b856e;
+  color: #59664d;
   font-weight: 500;
   white-space: nowrap;
   border-bottom: 2px solid transparent;
@@ -1033,13 +1033,13 @@ footer {
 }
 .skill-row small {
   font-size: 9px;
-  color: #8a937f;
+  color: #59664d;
   font-weight: 400;
   margin-left: 2px;
 }
 .scale-note {
   font-size: 9px;
-  color: #7c8770;
+  color: #59664d;
   margin-top: 25px;
 }
 .chart-summary {
@@ -1055,14 +1055,14 @@ footer {
 }
 .chart-summary > strong > span {
   font-size: 13px;
-  color: #81906d;
+  color: #59664d;
   letter-spacing: 0;
   margin-left: 7px;
   font-weight: 400;
 }
 .chart-description {
   font-size: 10px;
-  color: #78866a;
+  color: #59664d;
   margin-top: 8px;
 }
 .chart {
@@ -1096,7 +1096,7 @@ footer {
 .measurement-stat > span {
   font-size: 10px;
   font-weight: 600;
-  color: #6a785b;
+  color: #59664d;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1111,12 +1111,12 @@ footer {
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0;
-  color: #899677;
+  color: #59664d;
   margin-left: 5px;
 }
 .measurement-stat p {
   font-size: 9px;
-  color: #7f8b71;
+  color: #59664d;
 }
 .profile-bottom-grid {
   display: grid;
@@ -1137,7 +1137,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #7d8b65;
+  color: #59664d;
   margin-bottom: 17px;
 }
 .goal-card h3 {
@@ -1146,7 +1146,7 @@ footer {
 }
 .goal-card > p {
   font-size: 12px;
-  color: #79816f;
+  color: #59664d;
   overflow-wrap: anywhere;
 }
 .goal-target {
@@ -1159,11 +1159,11 @@ footer {
   font-size: 8px;
   letter-spacing: 0.1em;
   font-weight: 700;
-  color: #6b7c52;
+  color: #59664d;
 }
 .goal-target p {
   font-size: 12px;
-  color: #5c6b4d;
+  color: #59664d;
   margin-top: 6px;
   overflow-wrap: anywhere;
 }
@@ -1172,7 +1172,7 @@ footer {
   align-items: center;
   gap: 7px;
   font-size: 10px;
-  color: #7c866f;
+  color: #59664d;
   flex-wrap: wrap;
 }
 .completed-date {
@@ -1187,7 +1187,7 @@ footer {
   color: #536a3c;
 }
 .feedback-feature > svg {
-  color: #849d63;
+  color: #59664d;
 }
 .feedback-feature blockquote {
   font-size: 16px;
@@ -1219,7 +1219,7 @@ footer {
 }
 .mini-training p {
   font-size: 11px;
-  color: #7e8770;
+  color: #59664d;
   margin: 8px 0 5px;
 }
 .mini-training .text-link {
@@ -1257,7 +1257,7 @@ footer {
 }
 .assessment-history .eyebrow {
   font-size: 8px;
-  color: #7c8b69;
+  color: #59664d;
 }
 .assessment-history h3 {
   font-size: 20px;
@@ -1265,11 +1265,11 @@ footer {
 }
 .assessment-history summary p {
   font-size: 11px;
-  color: #818a73;
+  color: #59664d;
 }
 .expand-label {
   font-size: 10px;
-  color: #6e7b5d;
+  color: #59664d;
 }
 .assessment-detail {
   display: grid;
@@ -1280,7 +1280,7 @@ footer {
 }
 .assessment-detail .preserve-text {
   font-size: 13px;
-  color: #647154;
+  color: #59664d;
   margin-top: 10px;
 }
 .measurement-charts {
@@ -1306,7 +1306,7 @@ footer {
 }
 .measurement-entry .eyebrow {
   font-size: 8px;
-  color: #7a876b;
+  color: #59664d;
 }
 .measurement-entry h3 {
   font-size: 14px;
@@ -1318,13 +1318,13 @@ footer {
 }
 .measurement-entry small {
   font-size: 11px;
-  color: #879575;
+  color: #59664d;
   margin-left: 4px;
   font-weight: 400;
 }
 .measurement-entry > p {
   font-size: 11px;
-  color: #7d876f;
+  color: #59664d;
 }
 .goal-grid {
   display: grid;
@@ -1350,7 +1350,7 @@ footer {
   align-items: center;
   gap: 4px;
   font-size: 10px;
-  color: #576c3c;
+  color: #59664d;
 }
 .training-entry {
   padding: 24px;
@@ -1367,7 +1367,7 @@ footer {
   width: 48px;
   border-radius: 10px;
   background: #edf1e2;
-  color: #7c925a;
+  color: #59664d;
 }
 .entry-heading {
   display: flex;
@@ -1377,12 +1377,12 @@ footer {
 }
 .entry-meta {
   font-size: 10px;
-  color: #7b876d;
+  color: #59664d;
   margin-top: 6px;
 }
 .training-entry .preserve-text {
   font-size: 13px;
-  color: #627154;
+  color: #59664d;
   margin-top: 16px;
 }
 .feedback-list {
@@ -1404,16 +1404,16 @@ footer {
 .feedback-entry small {
   display: block;
   font-size: 10px;
-  color: #7c886d;
+  color: #59664d;
   margin-top: 4px;
 }
 .feedback-entry svg {
   margin-left: auto;
-  color: #8c9b73;
+  color: #59664d;
 }
 .feedback-entry > p {
   font-size: 14px;
-  color: #60714f;
+  color: #59664d;
   margin-top: 20px;
   line-height: 1.85;
 }
@@ -1447,7 +1447,7 @@ footer {
 .field-help {
   font-size: 11px;
   line-height: 1.6;
-  color: #748366;
+  color: #59664d;
 }
 .field-error {
   font-size: 11px;
@@ -1484,7 +1484,7 @@ footer {
 }
 .privacy-note {
   font-size: 11px;
-  color: #7d886e;
+  color: #59664d;
   margin-top: 19px;
   line-height: 1.7;
 }
@@ -1500,13 +1500,13 @@ footer {
 }
 .rubric p {
   font-size: 11px;
-  color: #576d42;
+  color: #59664d;
   margin-top: 7px;
 }
 .rubric > span {
   display: block;
   font-size: 10px;
-  color: #728260;
+  color: #59664d;
   line-height: 1.7;
   margin-top: 7px;
 }
@@ -1623,7 +1623,7 @@ footer {
 }
 .login-values > span {
   font-size: 9px;
-  color: #a9bf8d;
+  color: #59664d;
   display: flex;
   flex-direction: column;
   gap: 9px;
@@ -1637,7 +1637,7 @@ footer {
   right: -280px;
   bottom: -40px;
   width: 700px;
-  color: #9fb879;
+  color: #59664d;
   opacity: 0.18;
   transform: rotate(-27deg);
 }
@@ -1648,7 +1648,7 @@ footer {
   align-items: center;
   gap: 10px;
   font-size: 9px;
-  color: #b3c6a0;
+  color: #59664d;
 }
 .login-foot svg:last-child {
   margin-left: auto;
@@ -1701,7 +1701,7 @@ footer {
 }
 .demo-accounts > p {
   font-size: 10px;
-  color: #7b876b;
+  color: #59664d;
   margin-top: 6px;
 }
 .demo-accounts dl {
@@ -1716,7 +1716,7 @@ footer {
 }
 .demo-accounts dt {
   width: 57px;
-  color: #748360;
+  color: #59664d;
 }
 .demo-accounts dd {
   margin: 0;
@@ -1728,7 +1728,7 @@ footer {
   font-size: 10px !important;
   margin-top: 21px !important;
   line-height: 1.8 !important;
-  color: #859173 !important;
+  color: #59664d !important;
 }
 @media (min-width: 1600px) {
   .hero .court {
@@ -2512,9 +2512,7 @@ footer {
     font-size: 40px;
     margin-top: 16px;
   }
-  .login-message h1 br:first-of-type {
-    display: none;
-  }
+
   .login-message > p:not(.eyebrow) {
     font-size: 12px;
     margin-top: 15px;
@@ -2572,5 +2570,27 @@ footer {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Preserve legibility on the dark court panels. */
+.login-values > span,
+.login-foot,
+.hero-caption {
+  color: #bcccaa;
+}
+.hero .court {
+  color: #96ad76;
+}
+.login-story > .court {
+  color: #9fb879;
+}
+
+.chart svg text {
+  font-size: 14px;
+}
+@media (max-width: 700px) {
+  .chart svg text {
+    font-size: 20px;
   }
 }

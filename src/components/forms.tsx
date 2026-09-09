@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, useRef, type FormEvent } from "react";
 import { ArrowRight, Check, LoaderCircle } from "lucide-react";
 import {
   metrics,
@@ -42,6 +42,13 @@ export function DataForm({
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    const name = Object.keys(errors)[0];
+    const field = name ? formRef.current?.elements.namedItem(name) : null;
+    if (field instanceof HTMLElement) field.focus();
+  }, [errors]);
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -59,10 +66,6 @@ export function DataForm({
         setError(data.error ?? "Unable to save. Please try again.");
         setErrors(data.fields ?? {});
         setPending(false);
-        if (data.fields) {
-          const field = form.elements.namedItem(Object.keys(data.fields)[0]);
-          if (field instanceof HTMLElement) field.focus();
-        }
         return;
       }
       router.push(data.redirect ?? after ?? `/athletes/${data.id}?saved=1`);
@@ -75,7 +78,7 @@ export function DataForm({
     }
   }
   return (
-    <form onSubmit={handleSubmit} className="data-form">
+    <form ref={formRef} onSubmit={handleSubmit} className="data-form">
       {error && (
         <div role="alert" className="form-error">
           {error}

@@ -86,9 +86,7 @@ export function LineChart({
               stroke="white"
               strokeWidth="2"
             >
-              <title>
-                {formatDate(p.date)}: {p.value.toFixed(2)} {unit}
-              </title>
+              <title>{`${formatDate(p.date)}: ${p.value.toFixed(2)} ${unit}`}</title>
             </circle>
             {(i === 0 || i === points.length - 1 || points.length <= 5) && (
               <text
