@@ -77,6 +77,15 @@ type ResponsesPayload = {
   }>;
 };
 
+type OpenAIErrorPayload = {
+  error?: {
+    message?: string;
+    type?: string;
+    param?: string | null;
+    code?: string | null;
+  };
+};
+
 function responseText(payload: ResponsesPayload) {
   if (typeof payload.output_text === "string") return payload.output_text;
   return (
@@ -88,23 +97,50 @@ function responseText(payload: ResponsesPayload) {
   );
 }
 
+export function coachAIErrorMessage(
+  status: number,
+  payload: OpenAIErrorPayload = {},
+) {
+  const detail = payload.error?.message?.toLowerCase() ?? "";
+  const param = payload.error?.param?.toLowerCase() ?? "";
+
+  if (status === 401)
+    return "OpenAI rejected the API key. Check OPENAI_API_KEY in the local .env file and restart the app.";
+  if (status === 403)
+    return "This OpenAI API project is not allowed to use the configured AI model.";
+  if (status === 429)
+    return "OpenAI API quota or rate limit was reached. Check API billing and usage, then try again.";
+  if (
+    status === 404 ||
+    detail.includes("model") ||
+    param === "model" ||
+    payload.error?.code === "model_not_found"
+  )
+    return "The configured OpenAI model is not available to this API project. Check OPENAI_MODEL and model access.";
+  if (status === 400)
+    return "OpenAI rejected the AI request configuration. Check the Terminal log for the safe API error details.";
+
+  return "AI drafting could not complete. Please try again.";
+}
+
 export async function generateCoachDraft(args: {
   target: CoachDraftTarget;
   language: Locale;
   context: Record<string, string>;
 }) {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY?.trim();
   if (!apiKey)
     throw new AppError(
       503,
       "AI drafting is not configured. Add OPENAI_API_KEY to the local .env file.",
     );
 
+  const model = (process.env.OPENAI_MODEL ?? "gpt-5.6-luna").trim();
   const prompt = buildCoachDraftPrompt(args);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 20_000);
   try {
-    const response = await fetch("https://api.openai.com/v1/responses", {
+    const openAIResponse = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -112,21 +148,35 @@ export async function generateCoachDraft(args: {
       },
       signal: controller.signal,
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL ?? "gpt-5.6-luna",
+        model,
         instructions: prompt.instructions,
         input: prompt.input,
-        max_output_tokens: 300,
+        reasoning: { effort: "low" },
+        max_output_tokens: 1200,
         store: false,
       }),
     });
-    if (!response.ok) {
-      console.error("OpenAI draft request failed", response.status);
+    if (!openAIResponse.ok) {
+      let payload: OpenAIErrorPayload = {};
+      try {
+        payload = (await openAIResponse.json()) as OpenAIErrorPayload;
+      } catch {
+        payload = {};
+      }
+      console.error("OpenAI draft request failed", {
+        status: openAIResponse.status,
+        model,
+        type: payload.error?.type ?? null,
+        code: payload.error?.code ?? null,
+        param: payload.error?.param ?? null,
+        message: payload.error?.message ?? null,
+      });
       throw new AppError(
         502,
-        "AI drafting could not complete. Please try again.",
+        coachAIErrorMessage(openAIResponse.status, payload),
       );
     }
-    const payload = (await response.json()) as ResponsesPayload;
+    const payload = (await openAIResponse.json()) as ResponsesPayload;
     const draft = responseText(payload).trim();
     if (!draft)
       throw new AppError(
