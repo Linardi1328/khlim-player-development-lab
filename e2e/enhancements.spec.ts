@@ -28,6 +28,40 @@ test("language preference translates the login experience", async ({
   await expect(page.getByLabel("Alamat e-mel")).toBeVisible();
 });
 
+test("Malay desktop login keeps intended lines and logo inside its mark", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "desktop typography check");
+  await page.goto("/login");
+  await page.getByLabel("Language").selectOption("ms");
+  await expect(page.locator("html")).toHaveAttribute("lang", "ms");
+
+  const lineCounts = await page.locator(".login-message h1").evaluate((heading) => {
+    return Array.from(heading.childNodes)
+      .filter((node) => node.nodeType === Node.TEXT_NODE || node.nodeName === "SPAN")
+      .map((node) => {
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        return range.getClientRects().length;
+      });
+  });
+  expect(lineCounts).toEqual([1, 1, 1]);
+
+  const welcomeLines = await page
+    .locator(".login-form-wrap h2")
+    .evaluate((heading) => {
+      const range = document.createRange();
+      range.selectNodeContents(heading);
+      return range.getClientRects().length;
+    });
+  expect(welcomeLines).toBe(1);
+
+  const logoFits = await page.locator(".login-story .brand-mark").evaluate((mark) => {
+    return mark.scrollWidth <= mark.clientWidth && mark.scrollHeight <= mark.clientHeight;
+  });
+  expect(logoFits).toBe(true);
+});
+
 test("every supported login language stays within the viewport", async ({
   page,
 }) => {
