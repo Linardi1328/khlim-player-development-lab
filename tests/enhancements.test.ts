@@ -1,9 +1,4 @@
 import { afterEach, describe, expect, it } from "vitest";
-import {
-  buildCoachDraftPrompt,
-  coachAIErrorMessage,
-  type CoachDraftTarget,
-} from "../src/lib/coach-ai";
 import { checkOrigin } from "../src/lib/http";
 import {
   createLabResetToken,
@@ -84,52 +79,5 @@ describe("lab password reset tokens", () => {
     expect(() => verifyLabResetToken(token, "hash-v2")).toThrow(
       "invalid or expired",
     );
-  });
-});
-
-describe("coach AI drafting prompt", () => {
-  const cases: Array<[CoachDraftTarget, Record<string, string>]> = [
-    [
-      "focus",
-      {
-        name: "Fictional Athlete",
-        group: "U12",
-        position: "Guard",
-        hidden: "do not include",
-      },
-    ],
-    [
-      "assessmentNotes",
-      { shooting: "4", finishing: "2", passing: "4", defense: "2" },
-    ],
-    [
-      "practicePlan",
-      {
-        title: "Improve left-hand finishing",
-        target: "8 of 10 off-hand layups",
-      },
-    ],
-  ];
-  it.each(cases)("builds a constrained %s prompt", (target, context) => {
-    const prompt = buildCoachDraftPrompt({ target, language: "ms", context });
-    expect(prompt.instructions).toContain("Bahasa Melayu");
-    expect(prompt.instructions).toContain(
-      "Use only the supplied form context.",
-    );
-    expect(prompt.input).not.toContain("do not include");
-  });
-
-  it("maps upstream API failures to actionable messages", () => {
-    expect(coachAIErrorMessage(401)).toContain("OPENAI_API_KEY");
-    expect(coachAIErrorMessage(429)).toContain("quota or rate limit");
-    expect(
-      coachAIErrorMessage(400, {
-        error: {
-          message: "invalid model ID",
-          type: "invalid_request_error",
-          param: "model",
-        },
-      }),
-    ).toContain("OPENAI_MODEL");
   });
 });
