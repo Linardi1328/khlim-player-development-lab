@@ -3,14 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import {
-  ArrowRight,
-  Check,
-  Eye,
-  EyeOff,
-  LoaderCircle,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, Check, Eye, EyeOff, LoaderCircle } from "lucide-react";
 import {
   metrics,
   sessionTypes,
@@ -21,7 +14,6 @@ import {
 } from "@/lib/domain";
 import { useLanguage } from "./language-provider";
 
-type AiDraftTarget = "focus" | "assessmentNotes" | "practicePlan";
 type Field = {
   name: string;
   label: string;
@@ -33,7 +25,6 @@ type Field = {
   max?: number | string;
   step?: string;
   maxLength?: number;
-  aiDraft?: AiDraftTarget;
 };
 
 export function PasswordInput({
@@ -100,11 +91,9 @@ export function DataForm({
   after?: string;
 }) {
   const router = useRouter();
-  const { locale, tr } = useLanguage();
+  const { tr } = useLanguage();
   const [pending, setPending] = useState(false);
-  const [drafting, setDrafting] = useState<string | null>(null);
   const [error, setError] = useState("");
-  const [aiErrors, setAiErrors] = useState<Record<string, string>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -113,46 +102,6 @@ export function DataForm({
     const field = name ? formRef.current?.elements.namedItem(name) : null;
     if (field instanceof HTMLElement) field.focus();
   }, [errors]);
-
-  async function draftField(field: Field) {
-    if (!field.aiDraft || !formRef.current) return;
-    setDrafting(field.name);
-    setAiErrors((current) => ({ ...current, [field.name]: "" }));
-    try {
-      const context = Object.fromEntries(
-        Array.from(new FormData(formRef.current).entries()).map(
-          ([key, value]) => [key, String(value)],
-        ),
-      );
-      const response = await fetch("/api/ai/draft", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          target: field.aiDraft,
-          language: locale,
-          context,
-        }),
-      });
-      const data = await response.json();
-      if (!response.ok || typeof data.draft !== "string")
-        throw new Error(data.error ?? "AI drafting is unavailable right now.");
-      const textarea = formRef.current.elements.namedItem(field.name);
-      if (textarea instanceof HTMLTextAreaElement) {
-        textarea.value = data.draft.slice(0, field.maxLength ?? 2000);
-        textarea.focus();
-      }
-    } catch (draftError) {
-      setAiErrors((current) => ({
-        ...current,
-        [field.name]:
-          draftError instanceof Error
-            ? draftError.message
-            : "AI drafting is unavailable right now.",
-      }));
-    } finally {
-      setDrafting(null);
-    }
-  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -197,7 +146,6 @@ export function DataForm({
             [
               field.help ? `${id}-help` : "",
               errors[field.name] ? `${id}-error` : "",
-              aiErrors[field.name] ? `${id}-ai-error` : "",
             ]
               .filter(Boolean)
               .join(" ") || undefined;
@@ -217,23 +165,6 @@ export function DataForm({
             >
               <div className="field-label-row">
                 <label htmlFor={id}>{tr(field.label)}</label>
-                {field.aiDraft && (
-                  <button
-                    type="button"
-                    className="ai-draft-button"
-                    onClick={() => draftField(field)}
-                    disabled={pending || drafting === field.name}
-                  >
-                    {drafting === field.name ? (
-                      <LoaderCircle className="spin" size={14} />
-                    ) : (
-                      <Sparkles size={14} />
-                    )}
-                    {tr(
-                      drafting === field.name ? "Drafting…" : "Draft with AI",
-                    )}
-                  </button>
-                )}
               </div>
               {field.options ? (
                 <select {...common}>
@@ -280,20 +211,9 @@ export function DataForm({
                   {tr(field.help)}
                 </p>
               )}
-              {field.aiDraft && (
-                <p className="ai-helper">
-                  <Sparkles size={13} aria-hidden="true" />
-                  {tr("Review and edit this suggestion before saving.")}
-                </p>
-              )}
               {errors[field.name] && (
                 <p id={`${id}-error`} className="field-error">
                   {tr(errors[field.name])}
-                </p>
-              )}
-              {aiErrors[field.name] && (
-                <p id={`${id}-ai-error`} role="alert" className="field-error">
-                  {tr(aiErrors[field.name])}
                 </p>
               )}
             </div>
@@ -418,7 +338,6 @@ export function ProfileForm({
           maxLength: 240,
           value: athlete?.focus,
           help: "A clear, encouraging focus for the athlete’s next stage.",
-          aiDraft: "focus",
         },
       ]}
       submit={athlete ? "Save profile" : "Create athlete"}
@@ -471,7 +390,6 @@ export function RecordForm({
         label: "Assessment notes",
         type: "textarea",
         help: "Describe the observed skills and the next area to practice.",
-        aiDraft: "assessmentNotes",
       },
     ],
     measurements: [
@@ -526,7 +444,6 @@ export function RecordForm({
         name: "description",
         label: "Practice plan",
         type: "textarea",
-        aiDraft: "practicePlan",
       },
     ],
     training: [
