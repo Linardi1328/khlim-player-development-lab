@@ -76,7 +76,7 @@ test("every supported login language stays within the viewport", async ({
   page,
 }) => {
   await page.goto("/login");
-  const language = page.getByLabel("Language");
+  const language = page.locator(".login-language select");
   for (const locale of ["en", "ms", "zh-CN"] as const) {
     if ((await language.inputValue()) !== locale) {
       const navigation = page.waitForEvent("framenavigated");
