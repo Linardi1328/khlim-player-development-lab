@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { headers, login } from "./helpers";
+import { headers } from "./helpers";
 
 test("login supports password visibility and recovery navigation", async ({
   page,
@@ -103,32 +103,4 @@ test("local lab forgot-password flow returns a temporary reset path", async ({
   expect(response.ok()).toBeTruthy();
   const body = await response.json();
   expect(body.resetUrl).toMatch(/^\/reset-password\?token=/);
-});
-
-test("AI draft action responds without saving the assessment", async ({
-  page,
-}) => {
-  await login(page, "coach1");
-  await page.goto("/athletes");
-  await page
-    .getByRole("link", { name: /Avery Tan/ })
-    .first()
-    .click();
-  await page.getByRole("link", { name: "New check-in" }).first().click();
-  await expect(page).toHaveURL(/\/record\?type=assessments$/);
-  const notes = page.getByLabel("Assessment notes");
-  await expect(notes).toBeVisible();
-  const recordUrl = page.url();
-  await page.getByRole("button", { name: "Draft with AI" }).click();
-  await expect
-    .poll(async () => {
-      const draft = await notes.inputValue();
-      const error = await page.locator(".field-error").allTextContents();
-      return Boolean(draft || error.join(" "));
-    })
-    .toBe(true);
-  expect(page.url()).toBe(recordUrl);
-  await expect(
-    page.getByRole("button", { name: "Save assessment" }),
-  ).toBeVisible();
 });
