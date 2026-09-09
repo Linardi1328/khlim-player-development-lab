@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 import {
   buildCoachDraftPrompt,
+  coachAIErrorMessage,
   type CoachDraftTarget,
 } from "../src/lib/coach-ai";
 import { checkOrigin } from "../src/lib/http";
@@ -116,5 +117,19 @@ describe("coach AI drafting prompt", () => {
       "Use only the supplied form context.",
     );
     expect(prompt.input).not.toContain("do not include");
+  });
+
+  it("maps upstream API failures to actionable messages", () => {
+    expect(coachAIErrorMessage(401)).toContain("OPENAI_API_KEY");
+    expect(coachAIErrorMessage(429)).toContain("quota or rate limit");
+    expect(
+      coachAIErrorMessage(400, {
+        error: {
+          message: "invalid model ID",
+          type: "invalid_request_error",
+          param: "model",
+        },
+      }),
+    ).toContain("OPENAI_MODEL");
   });
 });
