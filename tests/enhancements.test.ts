@@ -25,11 +25,26 @@ describe("localization", () => {
 });
 
 describe("request origin validation", () => {
-  it("accepts the browser origin for the port the app is actually using", () => {
+  it("accepts the browser-facing host even when the framework reconstructs another URL", () => {
+    const request = new Request("http://localhost:3000/api/auth/login", {
+      method: "POST",
+      headers: {
+        origin: "http://127.0.0.1:3001",
+        host: "127.0.0.1:3001",
+        "x-forwarded-host": "127.0.0.1:3001",
+        "x-forwarded-proto": "http",
+        "content-type": "application/json",
+      },
+    });
+    expect(() => checkOrigin(request)).not.toThrow();
+  });
+
+  it("accepts a direct same-origin request", () => {
     const request = new Request("http://127.0.0.1:3001/api/auth/login", {
       method: "POST",
       headers: {
         origin: "http://127.0.0.1:3001",
+        host: "127.0.0.1:3001",
         "content-type": "application/json",
       },
     });
@@ -40,7 +55,8 @@ describe("request origin validation", () => {
     const request = new Request("http://127.0.0.1:3001/api/auth/login", {
       method: "POST",
       headers: {
-        origin: "http://127.0.0.1:3000",
+        origin: "http://evil.example.test",
+        host: "127.0.0.1:3001",
         "content-type": "application/json",
       },
     });
