@@ -23,8 +23,8 @@ export function checkOrigin(request: Request) {
     originUrl = null;
   }
 
-  const allowedHosts = [forwardedHost, host].filter(
-    (value): value is string => Boolean(value),
+  const allowedHosts = [forwardedHost, host].filter((value): value is string =>
+    Boolean(value),
   );
   const protocolMatches =
     originUrl !== null &&
