@@ -50,7 +50,9 @@ test("AI draft action responds without saving the assessment", async ({
     .first()
     .click();
   await page.getByRole("link", { name: "New check-in" }).first().click();
+  await expect(page).toHaveURL(/\/record\?type=assessments$/);
   const notes = page.getByLabel("Assessment notes");
+  await expect(notes).toBeVisible();
   const recordUrl = page.url();
   await page.getByRole("button", { name: "Draft with AI" }).click();
   await expect
