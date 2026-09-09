@@ -3,6 +3,7 @@ import {
   buildCoachDraftPrompt,
   type CoachDraftTarget,
 } from "../src/lib/coach-ai";
+import { checkOrigin } from "../src/lib/http";
 import {
   createLabResetToken,
   readLabResetEmail,
@@ -20,6 +21,32 @@ describe("localization", () => {
     expect(tr("ms", "Password")).toBe("Kata laluan");
     expect(tr("zh-CN", "Password")).toBe("密码");
     expect(tr("en", "Password")).toBe("Password");
+  });
+});
+
+describe("request origin validation", () => {
+  it("accepts the browser origin for the port the app is actually using", () => {
+    const request = new Request("http://127.0.0.1:3001/api/auth/login", {
+      method: "POST",
+      headers: {
+        origin: "http://127.0.0.1:3001",
+        "content-type": "application/json",
+      },
+    });
+    expect(() => checkOrigin(request)).not.toThrow();
+  });
+
+  it("rejects a different browser origin", () => {
+    const request = new Request("http://127.0.0.1:3001/api/auth/login", {
+      method: "POST",
+      headers: {
+        origin: "http://127.0.0.1:3000",
+        "content-type": "application/json",
+      },
+    });
+    expect(() => checkOrigin(request)).toThrow(
+      "This request could not be verified",
+    );
   });
 });
 
