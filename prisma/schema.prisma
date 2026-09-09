@@ -1,0 +1,166 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  COACH
+  ATHLETE
+}
+
+enum AgeGroup {
+  U9
+  U12
+  U15
+}
+
+enum Metric {
+  FREE_THROW
+  FIELD_GOAL
+  VERTICAL_JUMP
+  SPRINT_20M
+}
+
+enum GoalStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum SessionType {
+  SKILL_WORK
+  TEAM_PRACTICE
+  STRENGTH_CONDITIONING
+  GAME_REVIEW
+}
+
+model User {
+  id             String   @id @default(uuid()) @db.Uuid
+  email          String   @unique
+  name           String
+  role           Role
+  passwordHash   String?
+  externalAuthId String?  @unique @db.Uuid
+  createdAt      DateTime @default(now())
+  athlete        Athlete?
+  sessions       Session[]
+  assessments    DevelopmentAssessment[]
+  measurements   AthleteMeasurement[]
+  goals          DevelopmentGoal[]
+  training       TrainingSession[]
+  feedback       CoachFeedback[]
+}
+
+model Session {
+  id        String   @id
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model LoginThrottle {
+  key       String   @id
+  attempts  Int      @default(1)
+  resetAt   DateTime
+}
+
+model Athlete {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String?  @unique @db.Uuid
+  user         User?    @relation(fields: [userId], references: [id], onDelete: Restrict)
+  name         String
+  group        AgeGroup
+  jerseyNumber Int
+  position     String
+  focus        String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  assessments  DevelopmentAssessment[]
+  measurements AthleteMeasurement[]
+  goals        DevelopmentGoal[]
+  training     TrainingSession[]
+  feedback     CoachFeedback[]
+  @@index([group, name])
+}
+
+model DevelopmentAssessment {
+  id           String   @id @default(uuid()) @db.Uuid
+  athleteId    String   @db.Uuid
+  athlete      Athlete  @relation(fields: [athleteId], references: [id], onDelete: Restrict)
+  assessorId   String   @db.Uuid
+  assessor     User     @relation(fields: [assessorId], references: [id], onDelete: Restrict)
+  assessedAt   DateTime @db.Date
+  shooting     Int
+  finishing    Int
+  ballHandling Int
+  passing      Int
+  defense      Int
+  rebounding   Int
+  athleticism  Int
+  notes        String
+  createdAt    DateTime @default(now())
+  @@index([athleteId, assessedAt, createdAt])
+}
+
+model AthleteMeasurement {
+  id         String   @id @default(uuid()) @db.Uuid
+  athleteId  String   @db.Uuid
+  athlete    Athlete  @relation(fields: [athleteId], references: [id], onDelete: Restrict)
+  recordedById String @db.Uuid
+  recordedBy User     @relation(fields: [recordedById], references: [id], onDelete: Restrict)
+  metric     Metric
+  value      Float
+  unit       String
+  measuredAt DateTime @db.Date
+  protocol   String
+  createdAt  DateTime @default(now())
+  @@index([athleteId, metric, measuredAt, createdAt])
+}
+
+model DevelopmentGoal {
+  id          String     @id @default(uuid()) @db.Uuid
+  athleteId   String     @db.Uuid
+  athlete     Athlete    @relation(fields: [athleteId], references: [id], onDelete: Restrict)
+  coachId     String     @db.Uuid
+  coach       User       @relation(fields: [coachId], references: [id], onDelete: Restrict)
+  title       String
+  description String
+  target      String
+  status      GoalStatus @default(NOT_STARTED)
+  dueDate     DateTime   @db.Date
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  completedAt DateTime?
+  @@index([athleteId, status])
+}
+
+model TrainingSession {
+  id          String      @id @default(uuid()) @db.Uuid
+  athleteId   String      @db.Uuid
+  athlete     Athlete     @relation(fields: [athleteId], references: [id], onDelete: Restrict)
+  coachId     String      @db.Uuid
+  coach       User        @relation(fields: [coachId], references: [id], onDelete: Restrict)
+  sessionDate DateTime    @db.Date
+  type        SessionType
+  minutes     Int
+  notes       String
+  createdAt   DateTime    @default(now())
+  @@index([athleteId, sessionDate, createdAt])
+}
+
+model CoachFeedback {
+  id        String   @id @default(uuid()) @db.Uuid
+  athleteId String   @db.Uuid
+  athlete   Athlete  @relation(fields: [athleteId], references: [id], onDelete: Restrict)
+  coachId   String   @db.Uuid
+  coach     User     @relation(fields: [coachId], references: [id], onDelete: Restrict)
+  feedback  String
+  createdAt DateTime @default(now())
+  @@index([athleteId, createdAt])
+}
