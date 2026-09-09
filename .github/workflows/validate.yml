@@ -32,6 +32,7 @@ jobs:
       DATABASE_URL: postgresql://lab:lab_ci_only@127.0.0.1:5432/khlim_player_lab_test?schema=public
       APP_URL: http://127.0.0.1:3000
       AUTH_PROVIDER: lab
+      LAB_RESET_SECRET: ci-only-synthetic-player-lab-reset-secret
       NEXT_TELEMETRY_DISABLED: 1
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
