@@ -17,7 +17,11 @@ export async function POST(request: Request) {
     const viewer = await requireViewer();
     assertCoach(viewer);
     const body = schema.parse(await jsonBody(request));
-    const draft = await generateCoachDraft({ target: body.target, language: normalizeLocale(body.language), context: body.context });
+    const draft = await generateCoachDraft({
+      target: body.target,
+      language: normalizeLocale(body.language),
+      context: body.context,
+    });
     return { draft };
   });
 }

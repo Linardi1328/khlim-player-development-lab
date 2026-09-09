@@ -9,7 +9,9 @@ export default function ForgotPasswordPage() {
     <div className="auth-simple-page">
       <section className="panel auth-simple-card">
         <LanguageSwitcher />
-        <Link href="/login" className="text-link">← Back to sign in</Link>
+        <Link href="/login" className="text-link">
+          ← Back to sign in
+        </Link>
         <p className="eyebrow">KHLIM LABS · LOCAL ACCOUNT RECOVERY</p>
         <h1>Reset your password</h1>
         <p>Enter your lab account email to continue.</p>

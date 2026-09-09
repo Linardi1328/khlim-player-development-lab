@@ -16,7 +16,13 @@ import { Avatar } from "./ui";
 import { LanguageSwitcher } from "./language-switcher";
 import { useLanguage } from "./language-provider";
 
-export function Shell({ viewer, children }: { viewer: Viewer; children: React.ReactNode }) {
+export function Shell({
+  viewer,
+  children,
+}: {
+  viewer: Viewer;
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const { tr } = useLanguage();
@@ -29,7 +35,11 @@ export function Shell({ viewer, children }: { viewer: Viewer; children: React.Re
         { href: "/athletes", title: tr("Athlete roster"), icon: Users },
       ]
     : [
-        { href: `/athletes/${viewer.athleteId}`, title: tr("My development"), icon: Activity },
+        {
+          href: `/athletes/${viewer.athleteId}`,
+          title: tr("My development"),
+          icon: Activity,
+        },
       ];
 
   async function logout() {
@@ -51,11 +61,24 @@ export function Shell({ viewer, children }: { viewer: Viewer; children: React.Re
 
   return (
     <div className="app-shell">
-      <a className="skip-link" href="#main">{tr("Skip to content")}</a>
+      <a className="skip-link" href="#main">
+        {tr("Skip to content")}
+      </a>
       <aside className="sidebar">
-        <Link href={links[0].href} className="brand" aria-label="KHLIM Player Development Lab home">
-          <span className="brand-mark">K<span>↗</span></span>
-          <span><strong>KHLIM <small>LABS</small></strong><em>PLAYER DEVELOPMENT</em></span>
+        <Link
+          href={links[0].href}
+          className="brand"
+          aria-label="KHLIM Player Development Lab home"
+        >
+          <span className="brand-mark">
+            K<span>↗</span>
+          </span>
+          <span>
+            <strong>
+              KHLIM <small>LABS</small>
+            </strong>
+            <em>PLAYER DEVELOPMENT</em>
+          </span>
         </Link>
         <div className="workspace-label">{tr("THE DEVELOPMENT LAB")}</div>
         <nav aria-label={tr("Main navigation")}>
@@ -63,10 +86,20 @@ export function Shell({ viewer, children }: { viewer: Viewer; children: React.Re
             <Link
               key={href}
               href={href}
-              className={`nav-link ${href === "/athletes" ? (pathname.startsWith(href) ? "active" : "") : (pathname === href ? "active" : "")}`}
-              aria-current={(href === "/athletes" ? pathname.startsWith(href) : pathname === href) ? "page" : undefined}
+              className={`nav-link ${href === "/athletes" ? (pathname.startsWith(href) ? "active" : "") : pathname === href ? "active" : ""}`}
+              aria-current={
+                (
+                  href === "/athletes"
+                    ? pathname.startsWith(href)
+                    : pathname === href
+                )
+                  ? "page"
+                  : undefined
+              }
             >
-              <Icon size={19} />{title}<ArrowUpRight className="nav-arrow" size={15} />
+              <Icon size={19} />
+              {title}
+              <ArrowUpRight className="nav-arrow" size={15} />
             </Link>
           ))}
         </nav>
@@ -81,9 +114,17 @@ export function Shell({ viewer, children }: { viewer: Viewer; children: React.Re
           <Avatar name={viewer.name} />
           <div data-no-translate>
             <strong>{viewer.name}</strong>
-            <span>{coach ? tr("Coach") : tr("Athlete")} · {tr("Lab account")}</span>
+            <span>
+              {coach ? tr("Coach") : tr("Athlete")} · {tr("Lab account")}
+            </span>
           </div>
-          <button aria-label={tr("Sign out")} title={tr("Sign out")} onClick={logout} disabled={busy} className="icon-button">
+          <button
+            aria-label={tr("Sign out")}
+            title={tr("Sign out")}
+            onClick={logout}
+            disabled={busy}
+            className="icon-button"
+          >
             <LogOut size={18} />
           </button>
         </div>
@@ -91,11 +132,21 @@ export function Shell({ viewer, children }: { viewer: Viewer; children: React.Re
       </aside>
       <div className="main-wrap">
         <header className="topbar">
-          <span><span className="live-dot" />KHLIM PLAYER DEVELOPMENT LAB</span>
-          <span className="prototype-tag">{tr("Synthetic data")} <span>·</span> {tr("Prototype")}</span>
+          <span>
+            <span className="live-dot" />
+            KHLIM PLAYER DEVELOPMENT LAB
+          </span>
+          <span className="prototype-tag">
+            {tr("Synthetic data")} <span>·</span> {tr("Prototype")}
+          </span>
         </header>
-        <main id="main" tabIndex={-1}>{children}</main>
-        <footer>{tr("Built for development. Designed for possibility.")}<span>{tr("KHLIM Labs · Experimental prototype")}</span></footer>
+        <main id="main" tabIndex={-1}>
+          {children}
+        </main>
+        <footer>
+          {tr("Built for development. Designed for possibility.")}
+          <span>{tr("KHLIM Labs · Experimental prototype")}</span>
+        </footer>
       </div>
     </div>
   );

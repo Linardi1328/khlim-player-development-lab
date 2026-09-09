@@ -13,7 +13,9 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
       <select
         aria-label={tr("Language")}
         value={locale}
-        onChange={(event) => persistLanguage(normalizeLocale(event.target.value))}
+        onChange={(event) =>
+          persistLanguage(normalizeLocale(event.target.value))
+        }
       >
         {localeOptions.map((option) => (
           <option key={option.value} value={option.value}>
