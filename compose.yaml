@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres:17-alpine
+    ports:
+      - "127.0.0.1:54329:5432"
+    environment:
+      POSTGRES_DB: khlim_player_lab
+      POSTGRES_USER: lab
+      POSTGRES_PASSWORD: lab_local_only
+    volumes:
+      - player_lab_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lab -d khlim_player_lab"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+volumes:
+  player_lab_data:
