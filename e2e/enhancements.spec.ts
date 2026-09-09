@@ -77,15 +77,19 @@ test("every supported login language stays within the viewport", async ({
 }) => {
   await page.goto("/login");
   const language = page.getByLabel("Language");
-  for (const locale of ["en", "ms", "zh-CN"]) {
-    await language.selectOption(locale);
-    await expect
-      .poll(() =>
-        page.evaluate(
-          () => document.documentElement.scrollHeight <= window.innerHeight + 1,
-        ),
-      )
-      .toBe(true);
+  for (const locale of ["en", "ms", "zh-CN"] as const) {
+    if ((await language.inputValue()) !== locale) {
+      const navigation = page.waitForEvent("framenavigated");
+      await language.selectOption(locale);
+      await navigation;
+      await page.waitForLoadState("domcontentloaded");
+    }
+    await expect(page.locator("html")).toHaveAttribute("lang", locale);
+    const viewport = await page.evaluate(() => ({
+      scrollHeight: document.documentElement.scrollHeight,
+      innerHeight: window.innerHeight,
+    }));
+    expect(viewport.scrollHeight).toBeLessThanOrEqual(viewport.innerHeight + 1);
   }
 });
 
